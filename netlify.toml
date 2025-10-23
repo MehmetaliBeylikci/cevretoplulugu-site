@@ -12,3 +12,9 @@
   to = "/index.html"
   status = 200
 
+<<<<<<< HEAD
+=======
+[functions]
+directory = "netlify/functions"
+node_bundler = "esbuild"
+>>>>>>> d2edfbaf307d52f4531bd3efd1ad665020e6eaba
