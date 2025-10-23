@@ -3,7 +3,7 @@ class MediumBlogIntegration {
     constructor() {
         this.config = window.MEDIUM_CONFIG || {
             username: 'mehmetalibeylikci',
-            corsProxy: 'https://api.allorigins.win/raw?url=',
+            corsProxy: 'https://r.jina.ai/http://',
             settings: {
                 blogPagePostCount: 6,
                 maxDescriptionLength: 150,
@@ -57,19 +57,41 @@ class MediumBlogIntegration {
     async loadBlogPosts() {
         console.log('RSS feed(ler) yükleniyor...');
 
-        // Fetch all RSS feeds in parallel
-        const fetches = this.rssUrls.map(url => fetch(`${this.config.corsProxy}${encodeURIComponent(url)}`)
-            .then(resp => {
-                if (!resp.ok) throw new Error(`HTTP ${resp.status}: ${resp.statusText} for ${url}`);
-                return resp.text();
-            })
-            .catch(err => {
-                console.error('RSS fetch hatası for', url, err);
-                return null;
-            })
-        );
+       // Yardımcı: sırayla farklı proxy'leri dene
+const tryFetchViaProxies = async (rawUrl) => {
+  const proxies = [
+    'https://r.jina.ai/http://',
+    'https://r.jina.ai/https://',
+    'https://api.allorigins.win/raw?url=',
+    'https://cors.isomorphic-git.org/'
+  ];
+  const enc = encodeURIComponent;
 
-        const xmlResults = await Promise.all(fetches);
+  for (const p of proxies) {
+    const full = p.endsWith('url=') ? `${p}${enc(rawUrl)}` : `${p}${rawUrl}`;
+    try {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 12000); // 12 sn timeout
+      const resp = await fetch(full, { signal: ctrl.signal });
+      clearTimeout(t);
+      if (resp.ok) return await resp.text();
+    } catch (_) { /* sıradakine geç */ }
+  }
+  return null;
+};
+
+// Tüm RSS’leri paralelde dene
+const xmlResults = await Promise.all(
+  this.rssUrls.map(async (raw) => {
+    const rawUrl = raw.replace(/^https?:\/\//, m => m); // olduğu gibi bırak
+    const text = await tryFetchViaProxies(rawUrl);
+    if (!text) {
+      console.error('RSS fetch hatası for', rawUrl, '— tüm proxy denemeleri başarısız');
+    }
+    return text;
+  })
+);
+
         const parser = new DOMParser();
         let allItems = [];
 
@@ -580,4 +602,5 @@ const extractImageFromItem = (it) => {
 
 
 // Bu kod artık yukarıda birleştirildi
+
 
