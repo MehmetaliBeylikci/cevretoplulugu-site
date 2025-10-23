@@ -28,7 +28,10 @@ class MediumBlogIntegration {
         this.rssUrls = (this.config.rssUrls && this.config.rssUrls.length)
             ? this.config.rssUrls
             : [`https://medium.com/feed/@${this.config.username}`];
-        this.blogContainer = document.getElementById('blog-container');
+        this.blogContainer =
+          document.getElementById('blog-container') ||
+          document.getElementById('featured-post-container') ||
+          document.getElementById('blog-grid');
         this.init();
     }
 
@@ -361,22 +364,36 @@ class MediumBlogIntegration {
     }
 }
 
-// Sayfa yüklendiğinde blog entegrasyonunu başlat
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM yüklendi, sayfa kontrolü yapılıyor...');
-    console.log('Current pathname:', window.location.pathname);
-    
-    // Blog sayfası kontrolü
-    if (document.getElementById('blog-container')) {
-    console.log('Blog sayfası tespit edildi (container ile), MediumBlogIntegration başlatılıyor...');
+// Sayfa yüklendiğinde uygun entegrasyonu başlat
+document.addEventListener('DOMContentLoaded', function () {
+  console.log('DOM yüklendi, sayfa kontrolü yapılıyor...');
+  console.log('Current pathname:', window.location.pathname);
+
+  const path = location.pathname.replace(/\/+$/, '');
+
+  // BLOG sayfası: /blog, /blog.html veya container/grids varlığı
+  const isBlogPage =
+    path === '/blog' ||
+    path.endsWith('/blog.html') ||
+    document.getElementById('featured-post-container') ||
+    document.getElementById('blog-grid') ||
+    document.querySelector('[data-blog-page]');
+
+  if (isBlogPage) {
+    console.log('Blog sayfası tespit edildi, MediumBlogIntegration başlatılıyor...');
     new MediumBlogIntegration();
-}
-    
-    // Ana sayfa kontrolü
-    if (document.getElementById('homepage-posts-grid')) {
-    console.log('Ana sayfa tespit edildi (grid ile), HomepageBlogPreview başlatılıyor...');
+  }
+
+  // ANA SAYFA: kök yol veya homepage grid
+  const isHomePage =
+    path === '' ||
+    path === '/' ||
+    document.getElementById('homepage-posts-grid');
+
+  if (isHomePage) {
+    console.log('Ana sayfa tespit edildi, HomepageBlogPreview başlatılıyor...');
     new HomepageBlogPreview();
-}
+  }
 });
 
 // Ana sayfa için blog önizlemesi
@@ -563,3 +580,4 @@ const extractImageFromItem = (it) => {
 
 
 // Bu kod artık yukarıda birleştirildi
+
