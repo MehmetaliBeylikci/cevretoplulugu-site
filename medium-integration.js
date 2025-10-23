@@ -28,7 +28,11 @@ class MediumBlogIntegration {
         this.rssUrls = (this.config.rssUrls && this.config.rssUrls.length)
             ? this.config.rssUrls
             : [`https://medium.com/feed/@${this.config.username}`];
-        this.blogContainer = document.getElementById('blog-container');
+        this.blogContainer =
+          document.getElementById('blog-container') ||
+          document.getElementById('featured-post-container') ||
+          document.getElementById('blog-grid');
+
         this.init();
     }
 
@@ -360,30 +364,44 @@ class MediumBlogIntegration {
     }
 }
 
-// Sayfa yüklendiğinde blog entegrasyonunu başlat
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM yüklendi, sayfa kontrolü yapılıyor...');
-    console.log('Current pathname:', window.location.pathname);
-    
-    // Blog sayfası kontrolü
-    if (window.location.pathname.includes('blog.html') || window.location.pathname === '/blog.html' || window.location.pathname.endsWith('/blog.html')) {
-        console.log('Blog sayfası tespit edildi, MediumBlogIntegration başlatılıyor...');
-        new MediumBlogIntegration();
-    }
-    
-    // Ana sayfa kontrolü
-    if (window.location.pathname === '/' || window.location.pathname.includes('index.html') || window.location.pathname.endsWith('/index.html')) {
-        console.log('Ana sayfa tespit edildi, HomepageBlogPreview başlatılıyor...');
-        new HomepageBlogPreview();
-    }
+document.addEventListener('DOMContentLoaded', function () {
+  console.log('DOM yüklendi, sayfa kontrolü yapılıyor...');
+  console.log('Current pathname:', window.location.pathname);
+
+  const path = location.pathname.replace(/\/+$/, '');
+
+  // Blog sayfası: /blog veya container/grids varlığı
+  const isBlogPage =
+    path === '/blog' ||
+    path.endsWith('/blog.html') ||
+    document.getElementById('featured-post-container') ||
+    document.getElementById('blog-grid') ||
+    document.querySelector('[data-blog-page]');
+
+  if (isBlogPage) {
+    console.log('Blog sayfası tespit edildi, MediumBlogIntegration başlatılıyor...');
+    new MediumBlogIntegration();
+  }
+
+  // Ana sayfa: kök yol veya homepage grid
+  const isHomePage =
+    path === '' ||
+    path === '/' ||
+    document.getElementById('homepage-posts-grid');
+
+  if (isHomePage) {
+    console.log('Ana sayfa tespit edildi, HomepageBlogPreview başlatılıyor...');
+    new HomepageBlogPreview();
+  }
 });
+
 
 // Ana sayfa için blog önizlemesi
 class HomepageBlogPreview {
     constructor() {
         this.config = window.MEDIUM_CONFIG || {
             username: 'mehmetalibeylikci',
-            corsProxy: 'https://api.allorigins.win/raw?url=',
+            corsProxy: '/.netlify/functions/fetch-rss?url=',
             settings: {
                 homepagePostCount: 3,
                 homepageMaxDescriptionLength: 120,
@@ -561,3 +579,4 @@ const extractImageFromItem = (it) => {
 }
 
 // Bu kod artık yukarıda birleştirildi
+
