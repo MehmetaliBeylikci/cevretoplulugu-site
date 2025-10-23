@@ -1,6 +1,6 @@
 
 [build]
-  publish = "./"        # Yayınlanacak klasör (index.html'in olduğu dizin)
+  publish = "."        # Yayınlanacak klasör (index.html'in olduğu dizin)
   command = ""          # Statik site olduğu için build komutu yok
 
 [dev]
@@ -12,9 +12,7 @@
   to = "/index.html"
   status = 200
 
-<<<<<<< HEAD
-=======
 [functions]
 directory = "netlify/functions"
 node_bundler = "esbuild"
->>>>>>> d2edfbaf307d52f4531bd3efd1ad665020e6eaba
+
