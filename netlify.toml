@@ -1,0 +1,13 @@
+
+[build]
+  publish = "./"        # Yayınlanacak klasör (index.html'in olduğu dizin)
+  command = ""          # Statik site olduğu için build komutu yok
+
+[dev]
+  command = "npx serve ."  # Yerel test için (isteğe bağlı)
+  port = 8888
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

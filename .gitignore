@@ -1,0 +1,28 @@
+# Sistem dosyaları
+.DS_Store
+Thumbs.db
+
+# Editör / IDE klasörleri
+.vscode/
+.idea/
+
+# Derleme ve çıktı klasörleri
+dist/
+build/
+out/
+
+# Node / bağımlılıklar
+node_modules/
+npm-debug.log*
+yarn-error.log*
+package-lock.json
+pnpm-lock.yaml
+
+# Ortam dosyaları (API key vb.)
+.env
+.env.*
+.vercel/
+.netlify/
+
+# Netlify ve diğer platform cache dosyaları
+.cache/
