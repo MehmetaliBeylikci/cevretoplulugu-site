@@ -6,7 +6,7 @@ const MEDIUM_CONFIG = {
     // Birden fazla hesap eklemek isterseniz `usernames` dizisini kullanın.
     // Örnek: usernames: ['user1', 'user2']
     username: 'mehmetalibeylikci',
-    usernames: ['mehmetalibeylikci'],
+    usernames: ['mehmetalibeylikci', 'mert.efe.eroglu.2004'],
 
     // RSS feed URL'leri otomatik oluşturulur. `rssUrls` her iki konfigürasyon
     // şeklini (tekli veya çoklu) destekleyecek şekilde döner.
