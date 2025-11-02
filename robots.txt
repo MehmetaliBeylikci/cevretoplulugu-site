@@ -1,5 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://iytecevretoplulugu.com.tr/sitemap.xml
-Robots: https://iytecevretoplulugu.com.tr/robots.txt
