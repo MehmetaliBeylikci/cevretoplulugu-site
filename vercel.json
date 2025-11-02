@@ -6,8 +6,8 @@
     { "src": "/robots.txt",  "dest": "/public/robots.txt" },
     { "src": "/sitemap.xml", "dest": "/public/sitemap.xml" },
 
-    { "src": "/",      "dest": "/index.html" },
-    { "src": "/(.*)",  "dest": "/$1" }
+    { "src": "/",     "dest": "/index.html" },
+    { "src": "/(.*)", "dest": "/$1" }
   ],
   "headers": [
     {
